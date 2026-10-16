@@ -1,0 +1,29 @@
+name: Scan Repository UI Assets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Find UI and Web Assets
+        run: |
+          echo "=== 1. 寻找所有带有 UI 特征的文件和目录 ==="
+          find . -maxdepth 3 -not -path '*/.*' -not -path '*/target*' \
+            \( -name "*.html" -o -name "package.json" -o -name "tauri.conf.json" -o -name "MainActivity.kt" -o -name "AndroidManifest.xml" \)
+          
+          echo "=== 2. 检查 app 目录结构 ==="
+          if [ -d "app" ]; then
+            ls -la app/
+          fi
+          
+          echo "=== 3. 检查 core 目录结构 ==="
+          if [ -d "core" ]; then
+            ls -la core/
+          fi
